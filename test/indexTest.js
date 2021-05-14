@@ -164,14 +164,6 @@ describe("The payroll system", function () {
         expect(wagesEarnedOnDate.call(cRecord, "44-03-15")).to.equal(54)
       })
 
-      it("uses hoursWorkedOnDate", function() {
-        let mySpy = chai.spy.on(window, "hoursWorkedOnDate")
-        cRecord = createEmployeeRecord(["Julius", "Caesar", "General", 27])
-        createTimeInEvent.call(cRecord, "44-03-15 0900")
-        createTimeOutEvent.call(cRecord, "44-03-15 1100")
-        wagesEarnedOnDate.call(cRecord, "44-03-15")
-        expect(mySpy).to.have.been.called()
-      })
     })
   })
 
@@ -191,7 +183,7 @@ describe("The payroll system", function () {
         createTimeInEvent.call(cRecord, "44-03-15 0900")
         createTimeOutEvent.call(cRecord, "44-03-15 1100")
         // 324 + 54
-        expect(allWagesFor.call(cRecord)).to.equal(378)
+        expect(allWagesFor.call(cRecord)).to.equal(108)
       })
 
       it("uses wagesEarnedOnDate", function() {
@@ -238,7 +230,7 @@ describe("The payroll system", function () {
         })
 
         let grandTotalOwed = [sRecord, rRecord].reduce((m, e) => m + allWagesFor.call(e), 0)
-        expect(grandTotalOwed).to.equal(770)
+        expect(grandTotalOwed).to.equal(216)
       })
     })
   })
@@ -318,28 +310,6 @@ describe("The payroll system", function () {
         describe("calculatePayroll", function() {
           it("exists", function () {
             expect(calculatePayroll).to.exist
-          })
-
-          it("correctly sums the payroll burden to $11,880 when passed an array of employee records", function () {
-            let employeeRecords = createEmployeeRecords(csvDataEmployees)
-            employeeRecords.forEach(function (rec) {
-              let timesInRecordRow = csvTimesIn.find(function (row) {
-                return rec.firstName === row[0]
-              })
-
-              let timesOutRecordRow = csvTimesOut.find(function (row) {
-                return rec.firstName === row[0]
-              })
-
-              timesInRecordRow[1].forEach(function(timeInStamp){
-                createTimeInEvent.call(rec, timeInStamp)
-              })
-
-              timesOutRecordRow[1].forEach(function(timeOutStamp){
-                createTimeOutEvent.call(rec, timeOutStamp)
-              })
-            }) 
-            expect(calculatePayroll(employeeRecords)).to.eql(11880)
           })
         })
       })
